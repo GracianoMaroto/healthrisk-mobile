@@ -1,0 +1,9 @@
+{
+  "dart.flutterSdkPath": "C:\\Users\\graci\\develop\\flutter",
+  "files.watcherExclude": {
+    "**/windows/flutter/ephemeral/**": true,
+    "**/.plugin_symlinks/**": true,
+    "**/build/**": true,
+    "**/.dart_tool/**": true
+  }
+}
