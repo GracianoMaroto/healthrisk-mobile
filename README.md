@@ -10,24 +10,87 @@ Sim. Produção usa `AvaliadorLogistico` e o JSON `assets/models/mobile_lr_bundl
 
 O que ainda é da máquina (não vai para o celular): treino, `.joblib`, NHANES e o Streamlit B2B.
 
-## Como rodar nesta máquina
+## Como rodar (Chrome, emulador e APK no celular)
 
-O Flutter está em `%USERPROFILE%\develop\flutter`. No PowerShell desta pasta:
+> **Leia esta seção primeiro.** São os três jeitos oficiais de abrir o HealthRisk nesta entrega.
+> Sempre rode os comandos **nesta pasta do projeto**, no PowerShell.
+> Se o `flutter` não for reconhecido, comece **toda sessão** com o PATH abaixo.
 
 ```powershell
 $env:Path = "$env:USERPROFILE\develop\flutter\bin;" + $env:Path
-flutter pub get
-.\scripts\rodar_suite.ps1
-flutter run -d windows
 ```
 
-Se `flutter` “não é reconhecido”, use o PATH acima ou o script. No Cursor o SDK já aponta para essa pasta.
+Na primeira vez (ou depois de clonar): `flutter pub get`. Testes: `.\scripts\rodar_suite.ps1`.
 
-- **Windows (já nesta máquina):** `flutter run -d windows` — perfil, questionário e faixa funcionam; alarme real é Android/iOS.
-- **Celular Android:** ligue o aparelho (USB + depuração) ou um emulador no Android Studio e `flutter run`. Permita notificação quando o sistema pedir.
-- **APK para levar embora:** `flutter build apk`. Instala o arquivo `build/app/outputs/flutter-apk/app-release.apk` no telefone. Não precisa da sua máquina ligada.
+O Flutter desta máquina fica em `%USERPROFILE%\develop\flutter`. No Cursor o SDK já aponta para essa pasta.
 
-Fora desta máquina: clonar o repo, instalar [Flutter stable](https://docs.flutter.dev/get-started/install), `flutter pub get`, os mesmos comandos.
+---
+
+### 1) Preview no Chrome
+
+Rápido para ver telas no computador. **Não é o app de produção:** não usa SQLite, PIN no cofre nem alarme real. Recarregar a aba **zera** perfil, questionário e rotina.
+
+```powershell
+flutter run -d chrome
+```
+
+O navegador abre sozinho (em geral em `http://localhost:8080`). Feche com `q` no terminal.
+
+---
+
+### 2) Emulador Android (celular virtual)
+
+Aqui vale persistência, PIN e notificações, como no telefone.
+
+1. Abra o **Android Studio** → **More Actions → Virtual Device Manager** (ou *Device Manager*).
+2. Crie um aparelho se ainda não tiver: **Pixel 7** (ou Pixel 8), system image **API 35 ou 36 com Google Play**. Evite API 37 nesta máquina — o emulador tende a travar.
+3. Clique no **Play** do AVD e espere a **tela inicial** do Android (não só a janela preta).
+4. No PowerShell desta pasta:
+
+```powershell
+flutter devices
+flutter run
+```
+
+O emulador deve aparecer como `sdk gphone64 …` / `emulator-5554`. Se houver mais de um dispositivo:
+
+```powershell
+flutter run -d emulator-5554
+```
+
+Na **primeira** compilação o Gradle baixa NDK, CMake e plataformas — pode levar vários minutos. As seguintes são bem mais rápidas. Permita notificação se o sistema pedir.
+
+**Celular no cabo (opcional):** no telefone, ative *Opções do desenvolvedor* → *Depuração USB*, conecte, autorize o PC. `flutter devices` lista o aparelho; `flutter run` instala em modo debug. A máquina precisa ficar ligada.
+
+---
+
+### 3) APK para instalar no celular (caso geral)
+
+Gera um instalador que o telefone usa **sozinho**, sem cabo e sem o computador ligado.
+
+```powershell
+flutter build apk --release
+```
+
+Arquivo gerado:
+
+`build\app\outputs\flutter-apk\app-release.apk`
+
+**No celular (qualquer Android, passo a passo):**
+
+1. Copie o `app-release.apk` para o telefone (USB, Google Drive, WhatsApp, e-mail, etc.).
+2. Abra o arquivo no aparelho.
+3. Se o Android bloquear: **Configurações → Segurança** (ou a mensagem do instalador) → permita instalar deste app / **fontes desconhecidas**.
+4. Toque em **Instalar** → **Abrir**.
+5. Na primeira execução, permita **notificações** se o sistema pedir.
+
+Esse é o pacote para demonstrar ou entregar. Debug (igual ao `flutter run`, maior): `flutter build apk --debug`.
+
+---
+
+Fora desta máquina: clonar o repo, instalar [Flutter stable](https://docs.flutter.dev/get-started/install) e o [Android Studio](https://developer.android.com/studio) (SDK), `flutter pub get`, os mesmos comandos.
+
+`flutter run -d windows` exige Visual Studio com workload *Desktop development with C++*. Nesta máquina isso **não** está instalado; use Chrome ou o emulador.
 
 ## Regenerar o JSON do modelo
 

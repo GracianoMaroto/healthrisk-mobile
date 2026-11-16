@@ -57,17 +57,13 @@ What-If na tela de resultado: 150 min + −6 cm de cintura, sem ler exame.
 
 Nesta máquina o Flutter está em `%USERPROFILE%\develop\flutter`. Pasta do app: `Bloco 3 - des mobile`. O diretório `build` aponta por junction para `%USERPROFILE%\develop\healthrisk-mobile-build` (OneDrive trava o cache de teste).
 
+**Como abrir o app** (Chrome, emulador Android e APK no celular): seção destacada **«Como rodar»** no `README.md` da raiz.
+
 ```powershell
 $env:Path = "$env:USERPROFILE\develop\flutter\bin;" + $env:Path
 flutter pub get
 .\scripts\rodar_suite.ps1
-flutter run -d windows
 ```
-
-- Windows: perfil, questionário e faixa funcionam; alarme real é Android/iOS.
-- Celular: USB + depuração, `flutter run`. Permita notificação.
-- APK: `flutter build apk` (precisa Android SDK).
-- Fora desta máquina: clonar, Flutter stable, os mesmos comandos.
 
 Regenerar o JSON (repo do algoritmo):
 
@@ -77,7 +73,7 @@ python -m src.export_mobile_artifacts
 
 Copie `artifacts/mobile_lr_bundle.json` para `assets/models/`. Não copie `.joblib`.
 
-E2E desta entrega: `testWidgets` em `test/e2e/` (VM). Não há emulador Android nesta máquina. `flutter test integration_test` exigiria device, Developer Mode (symlinks) e caminho sem espaço.
+E2E desta entrega: `testWidgets` em `test/e2e/` (VM). `flutter test integration_test` exigiria device, Developer Mode (symlinks) e caminho sem espaço.
 
 ## 5. Método 3D — evidências
 
