@@ -6,6 +6,7 @@ import 'package:healthrisk_mobile/app/tema.dart';
 import 'package:healthrisk_mobile/data/modelos.dart';
 import 'package:healthrisk_mobile/domain/respostas.dart';
 import 'package:healthrisk_mobile/domain/resultado.dart';
+import 'package:healthrisk_mobile/domain/simulador_what_if.dart';
 import 'package:healthrisk_mobile/ui/widgets.dart';
 
 class ResultadoPage extends StatefulWidget {
@@ -36,25 +37,25 @@ class _ResultadoPageState extends State<ResultadoPage> {
       final atual = widget.sessao.perfil ?? await widget.sessao.deps.repos.perfil.obter();
       if (atual == null || widget.sessao.ultimoResultado == null) return;
       final agora = widget.sessao.deps.relogio.agora();
-      final respostas = Respostas(
+      final respostas = SimuladorWhatIf.aplicar(Respostas(
         idadeAnos: idadeEmAnos(atual.nascimento, agora),
         sexo: atual.sexo,
         pesoKg: atual.pesoKg,
         alturaCm: atual.alturaCm,
-        cinturaCm: atual.cinturaCm - 6,
+        cinturaCm: atual.cinturaCm,
         familiarPrimeiroGrau: atual.familiarPrimeiroGrau,
         pressaoAlta: atual.pressaoAlta,
         diagnosticoInformado: atual.diagnosticoInformado,
-        cumpre150min: true,
-        sentado8hOuMais: false,
-        hortalicaQuaseTodoDia: true,
-        comidaProntaFrequente: false,
-        bebidaAcucaradaFrequente: false,
-        embutidoFrequente: false,
+        cumpre150min: false,
+        sentado8hOuMais: true,
+        hortalicaQuaseTodoDia: false,
+        comidaProntaFrequente: true,
+        bebidaAcucaradaFrequente: true,
+        embutidoFrequente: true,
         escolaridadeOrd: atual.escolaridadeOrd,
         hdl: atual.hdl,
         insegurancaAlimentar: atual.insegurancaAlimentar,
-      );
+      ));
       setState(() => whatIf = widget.sessao.deps.avaliador.avaliar(respostas));
     } finally {
       if (mounted) setState(() => simulando = false);

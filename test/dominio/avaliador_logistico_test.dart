@@ -43,6 +43,18 @@ void main() {
     expect(b, closeTo(a, 1e-12));
   });
 
+  test('cumprir hortaliça e 150 min não lista fibra baixa nem falta de movimento', () {
+    final protetor = respostasGolden('alto').copyWith(
+      hortalicaQuaseTodoDia: true,
+      cumpre150min: true,
+      sentado8hOuMais: false,
+    );
+    final fatores = avaliador.avaliar(protetor).fatores.join(' | ').toLowerCase();
+    expect(fatores, isNot(contains('pouca hortaliça')));
+    expect(fatores, isNot(contains('menos de 150')));
+    expect(fatores, isNot(contains('8 horas ou mais')));
+  });
+
   test('diagnóstico informado não altera a probabilidade', () {
     final base = respostasGolden('alto');
     final comDiagnostico = base.copyWith(diagnosticoInformado: true);

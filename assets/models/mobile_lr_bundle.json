@@ -288,22 +288,22 @@
       -0.085596334,
       0.0915990385,
       0.1646006925,
-      -0.1858415045,
-      0.1135634626,
+      0.1858415045,
+      -0.1135634626,
       0.0095660142,
-      0.0959747799,
+      -0.0959747799,
       0.0343505131,
       -0.2031448015,
       -0.0457129953,
-      -0.1713495495,
+      0.1713495495,
       0.0545422168,
-      -0.0744774972,
+      0.0744774972,
       0.6782325037,
-      -0.0404417067,
+      0.0404417067,
       -0.4774481711,
       0.5376174982
     ],
-    "intercept": -0.710555482
+    "intercept": -0.7306152179
   },
   "parametros_dieta": {
     "fibra_g_dia": {
@@ -346,7 +346,6 @@
     "limiar_triagem_sensibilidade": 0.4
   },
   "fatores_acionaveis": [
-    "idade_anos",
     "razao_cintura_estatura",
     "historico_familiar_diabetes",
     "densidade_acucar",
@@ -409,7 +408,7 @@
         "hdl": 38.0,
         "historico_familiar_diabetes": 1.0
       },
-      "p": 0.7965256409,
+      "p": 0.9346777835,
       "faixa": "alto"
     },
     {
@@ -454,7 +453,7 @@
         "hdl": 46.0,
         "historico_familiar_diabetes": 1.0
       },
-      "p": 0.4479077252,
+      "p": 0.4697553608,
       "faixa": "moderado"
     },
     {
@@ -499,10 +498,22 @@
         "hdl": 62.0,
         "historico_familiar_diabetes": 0.0
       },
-      "p": 0.0303585169,
+      "p": 0.0090281947,
       "faixa": "baixo"
     }
   ],
+  "monotonia_clinica": {
+    "coeficientes_invertidos": [
+      "densidade_acucar",
+      "densidade_fibra",
+      "indice_qualidade_dieta",
+      "minutos_sentado",
+      "imc",
+      "pressao_alta"
+    ],
+    "intercepto_recalibrado": -0.7306152179,
+    "p_media_alvo": 0.396282
+  },
   "metricas_referencia": {
     "test_roc_auc": 0.8376,
     "recall_limiar_040": 0.8564

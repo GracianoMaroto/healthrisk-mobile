@@ -62,7 +62,7 @@ class AvaliadorLogistico implements AvaliadorRisco {
     return Resultado(
       faixa: _faixa(p, tercilInf, tercilSup),
       probabilidade: p,
-      fatores: _fatores(contribuicoes),
+      fatores: _fatores(contribuicoes, imputado, features),
     );
   }
 
@@ -96,13 +96,21 @@ class AvaliadorLogistico implements AvaliadorRisco {
     ];
   }
 
-  List<String> _fatores(Map<String, double> contribuicoes) {
+  List<String> _fatores(
+    Map<String, double> contribuicoes,
+    List<double> imputado,
+    List<String> features,
+  ) {
     final ocultos = ((bundle['fatores_nao_exibidos'] as List?) ?? const [])
         .cast<String>()
         .toSet();
+    final bruto = <String, double>{
+      for (var i = 0; i < features.length; i++) features[i]: imputado[i],
+    };
     final ranqueados = contribuicoes.entries
         .where((e) => !ocultos.contains(e.key) && e.value > 0)
         .where((e) => _frasesAcionaveis.containsKey(e.key))
+        .where((e) => _falhaLimiarClinico(e.key, bruto[e.key] ?? 0))
         .toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
@@ -115,6 +123,31 @@ class AvaliadorLogistico implements AvaliadorRisco {
       }
     }
     return frases;
+  }
+
+  /// Contribuição positiva vs a média do NHANES não basta: 600 MET-min ainda
+  /// fica abaixo da média de treino (~3394) e listava "menos de 150 minutos"
+  /// em quem já cumpre a OMS. Só aponta o fator se o valor cru falha o limiar.
+  static bool _falhaLimiarClinico(String feature, double valor) {
+    return switch (feature) {
+      'idade_anos' => valor >= 45,
+      'razao_cintura_estatura' => valor >= 0.50,
+      'historico_familiar_diabetes' => valor >= 1,
+      'densidade_acucar' => valor >= 50,
+      'densidade_fibra' => valor < 10,
+      'excesso_sodio' => valor >= 1,
+      'indice_qualidade_dieta' => valor < 0,
+      'refeicao_pronta' => valor >= 4,
+      'met_min_semana' => valor < 600,
+      'cumpre_oms_150' => valor < 1,
+      'minutos_sentado' => valor >= 480,
+      'sedentarismo_alto' => valor >= 1,
+      'imc' => valor >= 25,
+      'pressao_alta' => valor >= 1,
+      'hdl' => valor < 40,
+      'inseguranca_alimentar' => valor >= 1,
+      _ => true,
+    };
   }
 
   static String _faixaEtaria(double idade) {
